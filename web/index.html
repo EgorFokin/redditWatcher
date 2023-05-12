@@ -5,80 +5,7 @@
     <meta charset="UTF-8">
     <title>Data Fetcher</title>
     <script type="text/javascript" src="/eel.js"></script>
-    <style>
-        body {
-            background-color: #F2F2F2;
-            font-family: Arial, sans-serif;
-            color: #444444;
-            font-size: 16px;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        input[type="text"],
-        input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #CCCCCC;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        input[type="date"]::-webkit-inner-spin-button {
-            display: none;
-        }
-        button[type="button"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        #loading-wrapper {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        #loading-spinner {
-            position: fixed;
-            top: calc(50% - 60px);
-            left: calc(50% - 60px);
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #4CAF50;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #message {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css" type="text/css" >
 </head>
 <body>
     <form>
@@ -96,33 +23,31 @@
         </div>
         <button type="button" onclick="fetchData()">Download</button>
     </form>
-    <div id="loading-wrapper">
-        <div id="loading-spinner"></div>
-    </div>
     <p id="message"></p>
+    <div id="downloading-spinner" class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
     <script>
         function fetchData() {
             var subreddit = document.getElementById("subreddit").value;
             var since = document.getElementById("since").value;
             var until = document.getElementById("until").value;
-            var loadingWrapper = document.getElementById("loading-wrapper");
+            var ldsSpinner = document.getElementById("downloading-spinner");
             var message = document.getElementById("message");
 
             // show the loading animation
-            loadingWrapper.style.display = "block";
+            ldsSpinner.style.display = "block";
             message.textContent = "Downloading data...";
 
             // call the fetch_data function
             eel.fetch_data(subreddit, since, until)(function(result) {
                 // hide the loading animation
-                loadingWrapper.style.display = "none";
+                ldsSpinner.style.display = "none";
 
                 // update the message
                 message.textContent = "Download complete. Data saved to " +
                  result.file_path + ". " + result.submission_count + " submissions were downloaded.";
             });
         }
-        eel.expose(show_message);
     </script>
 </body>
 </html>
